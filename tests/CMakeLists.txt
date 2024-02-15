@@ -7,14 +7,25 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+set_source_files_properties(
+  matrix_test.cc
+  cuda_matrix_test.cc
+  PROPERTIES LANGUAGE CUDA
+)
+
 add_executable(
   matrix_test
   matrix_test.cc
+  cuda_matrix_test.cc
 )
+
+set_property(TARGET matrix_test 
+             PROPERTY CUDA_ARCHITECTURES 60) # 60 is the compute capability of the Jetson Nano 
 
 target_link_libraries(
   matrix_test
   GTest::gtest_main
+  cudart
 )
 
 include(GoogleTest)

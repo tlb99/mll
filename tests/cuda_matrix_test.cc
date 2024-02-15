@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
-#include "matrix.hpp"
+#include "cuda_matrix.cuh"
 
-TEST(MatrixTest, BasicAssertions) {
-    Matrix<int> m(2, 2);
+TEST(CUDAMatrixTest, BasicAssertions) {
+    CUDAMatrix<int> m(2, 2);
     m.setElement(0, 0, 1);
     m.setElement(0, 1, 2);
     m.setElement(1, 0, 3);
@@ -14,20 +14,20 @@ TEST(MatrixTest, BasicAssertions) {
     EXPECT_EQ(m.getElement(1, 1), 4);
 }
 
-TEST(MatrixTest, MatrixAddition) {
-    Matrix<int> m1(2, 2);
+TEST(CUDAMatrixTest, MatrixAddition) {
+    CUDAMatrix<int> m1(2, 2);
     m1.setElement(0, 0, 1);
     m1.setElement(0, 1, 2);
     m1.setElement(1, 0, 3);
     m1.setElement(1, 1, 4);
 
-    Matrix<int> m2(2, 2);
+    CUDAMatrix<int> m2(2, 2);
     m2.setElement(0, 0, 5);
     m2.setElement(0, 1, 6);
     m2.setElement(1, 0, 7);
     m2.setElement(1, 1, 8);
 
-    Matrix<int> m3 = m1 + m2;
+    CUDAMatrix<int> m3 = m1 + m2;
 
     EXPECT_EQ(m3.getElement(0, 0), 6);
     EXPECT_EQ(m3.getElement(0, 1), 8);
@@ -35,19 +35,19 @@ TEST(MatrixTest, MatrixAddition) {
     EXPECT_EQ(m3.getElement(1, 1), 12);
 }
 
-TEST(MatrixTest, MatrixAdditionWithInvalidSizes) {
-    Matrix<int> m1(2, 2);
+TEST(CUDAMatrixTest, MatrixAdditionWithInvalidSizes) {
+    CUDAMatrix<int> m1(2, 2);
     m1.setElement(0, 0, 1);
     m1.setElement(0, 1, 2);
     m1.setElement(1, 0, 3);
     m1.setElement(1, 1, 4);
 
-    Matrix<int> m2(2, 1);
+    CUDAMatrix<int> m2(2, 1);
     m2.setElement(0, 0, 5);
     m2.setElement(1, 0, 6);
 
     try {
-        Matrix<int> m3 = m1 + m2;
+        CUDAMatrix<int> m3 = m1 + m2;
         FAIL() << "Expected std::invalid_argument";
     } catch (std::invalid_argument const &err) {
         EXPECT_EQ(err.what(), std::string("Invalid matrix sizes for addition"));
@@ -56,8 +56,8 @@ TEST(MatrixTest, MatrixAdditionWithInvalidSizes) {
     }
 }
 
-TEST(MatrixTest, MatrixScalarAddition) {
-    Matrix<int> m1(2, 2);
+TEST(CUDAMatrixTest, MatrixScalarAddition) {
+    CUDAMatrix<int> m1(2, 2);
     m1.setElement(0, 0, 1);
     m1.setElement(0, 1, 2);
     m1.setElement(1, 0, 3);
@@ -65,7 +65,7 @@ TEST(MatrixTest, MatrixScalarAddition) {
 
     int s1 = 5;
 
-    Matrix<int> m2 = m1 + s1;
+    CUDAMatrix<int> m2 = m1 + s1;
 
     EXPECT_EQ(m2.getElement(0, 0), 6);
     EXPECT_EQ(m2.getElement(0, 1), 7);
@@ -73,8 +73,8 @@ TEST(MatrixTest, MatrixScalarAddition) {
     EXPECT_EQ(m2.getElement(1, 1), 9);
 }
 
-TEST(MatrixTest, ScalarMatrixAddition) {
-    Matrix<int> m1(2, 2);
+TEST(CUDAMatrixTest, ScalarMatrixAddition) {
+    CUDAMatrix<int> m1(2, 2);
     m1.setElement(0, 0, 1);
     m1.setElement(0, 1, 2);
     m1.setElement(1, 0, 3);
@@ -82,7 +82,7 @@ TEST(MatrixTest, ScalarMatrixAddition) {
 
     int s1 = 5;
 
-    Matrix<int> m2 = s1 + m1;
+    CUDAMatrix<int> m2 = s1 + m1;
 
     EXPECT_EQ(m2.getElement(0, 0), 6);
     EXPECT_EQ(m2.getElement(0, 1), 7);
@@ -90,20 +90,20 @@ TEST(MatrixTest, ScalarMatrixAddition) {
     EXPECT_EQ(m2.getElement(1, 1), 9);
 }
 
-TEST(MatrixTest, MatrixSubtraction) {
-    Matrix<int> m1(2, 2);
+TEST(CUDAMatrixTest, MatrixSubtraction) {
+    CUDAMatrix<int> m1(2, 2);
     m1.setElement(0, 0, 1);
     m1.setElement(0, 1, 2);
     m1.setElement(1, 0, 3);
     m1.setElement(1, 1, 4);
 
-    Matrix<int> m2(2, 2);
+    CUDAMatrix<int> m2(2, 2);
     m2.setElement(0, 0, 5);
     m2.setElement(0, 1, 6);
     m2.setElement(1, 0, 7);
     m2.setElement(1, 1, 8);
 
-    Matrix<int> m3 = m1 - m2;
+    CUDAMatrix<int> m3 = m1 - m2;
 
     EXPECT_EQ(m3.getElement(0, 0), -4);
     EXPECT_EQ(m3.getElement(0, 1), -4);
@@ -111,19 +111,19 @@ TEST(MatrixTest, MatrixSubtraction) {
     EXPECT_EQ(m3.getElement(1, 1), -4);
 }
 
-TEST(MatrixTest, MatrixSubtractionWithInvalidSizes) {
-    Matrix<int> m1(2, 2);
+TEST(CUDAMatrixTest, MatrixSubtractionWithInvalidSizes) {
+    CUDAMatrix<int> m1(2, 2);
     m1.setElement(0, 0, 1);
     m1.setElement(0, 1, 2);
     m1.setElement(1, 0, 3);
     m1.setElement(1, 1, 4);
 
-    Matrix<int> m2(2, 1);
+    CUDAMatrix<int> m2(2, 1);
     m2.setElement(0, 0, 5);
     m2.setElement(1, 0, 6);
 
     try {
-        Matrix<int> m3 = m1 - m2;
+        CUDAMatrix<int> m3 = m1 - m2;
         FAIL() << "Expected std::invalid_argument";
     } catch (std::invalid_argument const &err) {
         EXPECT_EQ(err.what(), std::string("Invalid matrix sizes for subtraction"));
@@ -132,8 +132,8 @@ TEST(MatrixTest, MatrixSubtractionWithInvalidSizes) {
     }
 }
 
-TEST(MatrixTest, MatrixScalarSubtraction) {
-    Matrix<int> m1(2, 2);
+TEST(CUDAMatrixTest, MatrixScalarSubtraction) {
+    CUDAMatrix<int> m1(2, 2);
     m1.setElement(0, 0, 1);
     m1.setElement(0, 1, 2);
     m1.setElement(1, 0, 3);
@@ -141,7 +141,7 @@ TEST(MatrixTest, MatrixScalarSubtraction) {
 
     int s1 = 5;
 
-    Matrix<int> m2 = m1 - s1;
+    CUDAMatrix<int> m2 = m1 - s1;
 
     EXPECT_EQ(m2.getElement(0, 0), -4);
     EXPECT_EQ(m2.getElement(0, 1), -3);
@@ -149,8 +149,8 @@ TEST(MatrixTest, MatrixScalarSubtraction) {
     EXPECT_EQ(m2.getElement(1, 1), -1);
 }
 
-TEST(MatrixTest, ScalarMatrixSubtraction) {
-    Matrix<int> m1(2, 2);
+TEST(CUDAMatrixTest, ScalarMatrixSubtraction) {
+    CUDAMatrix<int> m1(2, 2);
     m1.setElement(0, 0, 1);
     m1.setElement(0, 1, 2);
     m1.setElement(1, 0, 3);
@@ -158,7 +158,7 @@ TEST(MatrixTest, ScalarMatrixSubtraction) {
 
     int s1 = 5;
 
-    Matrix<int> m2 = s1 - m1;
+    CUDAMatrix<int> m2 = s1 - m1;
 
     EXPECT_EQ(m2.getElement(0, 0), 4);
     EXPECT_EQ(m2.getElement(0, 1), 3);
@@ -166,20 +166,20 @@ TEST(MatrixTest, ScalarMatrixSubtraction) {
     EXPECT_EQ(m2.getElement(1, 1), 1);
 }
 
-TEST(MatrixTest, MatrixMultiplication) {
-    Matrix<int> m1(2, 2);
+TEST(CUDAMatrixTest, MatrixMultiplication) {
+    CUDAMatrix<int> m1(2, 2);
     m1.setElement(0, 0, 1);
     m1.setElement(0, 1, 2);
     m1.setElement(1, 0, 3);
     m1.setElement(1, 1, 4);
 
-    Matrix<int> m2(2, 2);
+    CUDAMatrix<int> m2(2, 2);
     m2.setElement(0, 0, 5);
     m2.setElement(0, 1, 6);
     m2.setElement(1, 0, 7);
     m2.setElement(1, 1, 8);
 
-    Matrix<int> m3 = m1 * m2;
+    CUDAMatrix<int> m3 = m1 * m2;
 
     EXPECT_EQ(m3.getElement(0, 0), 19);
     EXPECT_EQ(m3.getElement(0, 1), 22);
@@ -187,8 +187,8 @@ TEST(MatrixTest, MatrixMultiplication) {
     EXPECT_EQ(m3.getElement(1, 1), 50);
 }
 
-TEST(MatrixTest, MatrixScalarMultiplication) {
-    Matrix<int> m1(2, 2);
+TEST(CUDAMatrixTest, MatrixScalarMultiplication) {
+    CUDAMatrix<int> m1(2, 2);
     m1.setElement(0, 0, 1);
     m1.setElement(0, 1, 2);
     m1.setElement(1, 0, 3);
@@ -196,7 +196,7 @@ TEST(MatrixTest, MatrixScalarMultiplication) {
 
     int s1 = 5;
 
-    Matrix<int> m2 = m1 * s1;
+    CUDAMatrix<int> m2 = m1 * s1;
 
     EXPECT_EQ(m2.getElement(0, 0), 5);
     EXPECT_EQ(m2.getElement(0, 1), 10);
@@ -204,8 +204,8 @@ TEST(MatrixTest, MatrixScalarMultiplication) {
     EXPECT_EQ(m2.getElement(1, 1), 20);
 }
 
-TEST(MatrixTest, ScalarMatrixMultiplication) {
-    Matrix<int> m1(2, 2);
+TEST(CUDAMatrixTest, ScalarMatrixMultiplication) {
+    CUDAMatrix<int> m1(2, 2);
     m1.setElement(0, 0, 1);
     m1.setElement(0, 1, 2);
     m1.setElement(1, 0, 3);
@@ -213,7 +213,7 @@ TEST(MatrixTest, ScalarMatrixMultiplication) {
 
     int s1 = 5;
 
-    Matrix<int> m2 = s1 * m1;
+    CUDAMatrix<int> m2 = s1 * m1;
 
     EXPECT_EQ(m2.getElement(0, 0), 5);
     EXPECT_EQ(m2.getElement(0, 1), 10);
@@ -221,17 +221,17 @@ TEST(MatrixTest, ScalarMatrixMultiplication) {
     EXPECT_EQ(m2.getElement(1, 1), 20);
 }
 
-TEST(MatrixTest, MatrixMultiplicationWithInvalidSizes) {
-    Matrix<int> m1(1, 2);
+TEST(CUDAMatrixTest, MatrixMultiplicationWithInvalidSizes) {
+    CUDAMatrix<int> m1(1, 2);
     m1.setElement(0, 0, 1);
     m1.setElement(0, 1, 2);
 
-    Matrix<int> m2(1, 2);
+    CUDAMatrix<int> m2(1, 2);
     m2.setElement(0, 0, 5);
     m2.setElement(0, 1, 6);
 
     try {
-        Matrix<int> m3 = m1 * m2;
+        CUDAMatrix<int> m3 = m1 * m2;
         FAIL() << "Expected std::invalid_argument";
     } catch (std::invalid_argument const &err) {
         EXPECT_EQ(err.what(), std::string("Invalid matrix sizes for multiplication"));
@@ -240,14 +240,14 @@ TEST(MatrixTest, MatrixMultiplicationWithInvalidSizes) {
     }
 }
 
-TEST(MatrixTest, MatrixEquality) {
-    Matrix<int> m1(2, 2);
+TEST(CUDAMatrixTest, MatrixEquality) {
+    CUDAMatrix<int> m1(2, 2);
     m1.setElement(0, 0, 1);
     m1.setElement(0, 1, 2);
     m1.setElement(1, 0, 3);
     m1.setElement(1, 1, 4);
 
-    Matrix<int> m2(2, 2);
+    CUDAMatrix<int> m2(2, 2);
     m2.setElement(0, 0, 1);
     m2.setElement(0, 1, 2);
     m2.setElement(1, 0, 3);
@@ -258,14 +258,14 @@ TEST(MatrixTest, MatrixEquality) {
     EXPECT_EQ(eq, true);
 }
 
-TEST(MatrixTest, MatrixInequality) {
-    Matrix<int> m1(2, 2);
+TEST(CUDAMatrixTest, MatrixInequality) {
+    CUDAMatrix<int> m1(2, 2);
     m1.setElement(0, 0, 1);
     m1.setElement(0, 1, 2);
     m1.setElement(1, 0, 3);
     m1.setElement(1, 1, 4);
 
-    Matrix<int> m2(2, 2);
+    CUDAMatrix<int> m2(2, 2);
     m2.setElement(0, 0, 5);
     m2.setElement(0, 1, 6);
     m2.setElement(1, 0, 7);
