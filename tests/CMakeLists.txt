@@ -15,6 +15,7 @@ add_executable(
 target_link_libraries(
   matrix_test
   GTest::gtest_main
+  "C:/Python310/libs/python310.lib" 
 )
 
 include(GoogleTest)
